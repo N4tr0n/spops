@@ -1,0 +1,207 @@
+\documentclass[12pt,oneside]{article}
+% Change "article" to "report" to get rid of page number on title page
+\usepackage{amsmath,amsfonts,amsthm,amssymb}
+\usepackage{setspace}
+\usepackage{fancyhdr}
+\usepackage{lastpage}
+\usepackage{extramarks}
+\usepackage{chngpage}
+\usepackage{soul}
+\usepackage[usenames,dvipsnames]{color}
+\usepackage{graphicx,float,wrapfig}
+\usepackage{ifthen}
+\usepackage{listings}
+\usepackage{courier}
+\setlength{\headheight}{15pt}
+\definecolor{MyDarkGreen}{rgb}{0.0,0.4,0.0}
+\newtheorem{claim}{Claim}
+% For faster processing, load Matlab syntax for listings
+\lstloadlanguages{Matlab}%
+\lstset{language=Matlab,
+  frame=single,
+  basicstyle=\small\ttfamily,
+  keywordstyle=[1]\color{Blue}\bf,
+  keywordstyle=[2]\color{Purple},
+  keywordstyle=[3]\color{Blue}\underbar,
+  identifierstyle=,
+  commentstyle=\usefont{T1}{pcr}{m}{sl}\color{MyDarkGreen}\small,
+  stringstyle=\color{Purple},
+  showstringspaces=false,
+  tabsize=5,
+  % Put standard MATLAB functions not included in the default
+  % language here
+  morekeywords={xlim,ylim,var,alpha,factorial,poissrnd,normpdf,normcdf},
+  % Put MATLAB function parameters here
+  morekeywords=[2]{on, off, interp},
+  % Put user defined functions here
+  morekeywords=[3]{FindESS},
+  morecomment=[l][\color{Blue}]{...},
+  numbers=left,
+  firstnumber=1,
+  numberstyle=\tiny\color{Blue},
+  stepnumber=5
+}
+
+% In case you need to adjust margins:
+%\topmargin=-0.45in      %
+%\evensidemargin=0in     %
+%\oddsidemargin=0in      %
+%\textwidth=6.5in        %
+%\textheight=9.0in       %
+%\headsep=0.25in         %
+
+% Setup the header and footer
+\pagestyle{fancy}
+% This is used to trace down (pin point) problems
+% in latexing a document:
+%\tracingall
+
+% Includes a figure
+% The first parameter is the label, which is also the name of the figure
+% with or without the extension (e.g., .eps, .fig, .png, .gif, etc.)
+% IF NO EXTENSION IS GIVEN, LaTeX will look for the most appropriate one.
+% This means that if a DVI (or PS) is being produced, it will look for
+% an eps. If a PDF is being produced, it will look for nearly anything
+% else (gif, jpg, png, et cetera). Because of this, when I generate figures
+% I typically generate an eps and a png to allow me the most flexibility
+% when rendering my document.
+% The second parameter is the width of the figure normalized to column width
+% (e.g. 0.5 for half a column, 0.75 for 75% of the column)
+% The third parameter is the caption.
+\newcommand{\scalefig}[3]{
+  \begin{figure}[ht!]
+    % Requires \usepackage{graphicx}
+    \centering
+    \includegraphics[width=#2\columnwidth]{#1}
+    %%% I think \captionwidth (see above) can go away as long as
+    %%% \centering is above
+    % \captionwidth{#2\columnwidth}%
+    \caption{#3}
+    \label{#1}
+  \end{figure}}
+
+% Includes a MATLAB script.
+% The first parameter is the label, which also is the name of the script
+% without the .m.
+% The second parameter is the optional caption.
+\newcommand{\matlabscript}[2]
+{\begin{itemize}\item[]\lstinputlisting[caption=#2,label=#1]{#1.m}\end{itemize}}
+\title{Projection Operators and Canonical Symmetry for the Plane Wave Modes}
+\date{\today}
+\author{Nathan Hitchings}
+\begin{document}
+\maketitle
+Let $\Phi(t,x)$ be a solution to the Klein-Gordon equation and assume
+we can expand $\Phi$ as follows:
+\begin{equation}
+  \Phi(t,x)=\int_ka(k)U_k+\bar{a}(k)\bar{U}_k\, dk
+\end{equation}
+where 
+\begin{align}
+  U_k&=\frac{1}{\sqrt{4\pi\omega_k}}e^{-i\omega_kt+ikx}\\
+  \bar{U}_k&=\frac{1}{\sqrt{4\pi\omega_k}}e^{i\omega_kt-ikx}
+\end{align}
+and 
+\begin{align}
+  a(k)&=\sqrt{\frac{\omega_k}{2}}\hat{\phi}(k)+i\sqrt{\frac{1}{2\omega_k}}\hat{\pi}(k)\\
+  \bar{a}(k)&=\sqrt{\frac{\omega_k}{2}}\hat{\phi}(k)-i\sqrt{\frac{1}{2\omega_k}}\hat{\pi}(k).
+\end{align}
+First, we need to find the operator $P^+$. This operator projects out the
+positive part of a given $\Phi$. That is,
+\begin{equation}\label{eq:pplus}
+  P^+\Phi=\int_ka(k)U_k\, dk.
+\end{equation}
+Substituting the expressions for $a(k)$ and $U_k$ into
+\eqref{eq:pplus} we get 
+\begin{equation}
+  P^+\Phi=\int_k\left(\sqrt{\frac{\omega_k}{2}}\hat{\phi}(k)+i\sqrt{\frac{1}{2\omega_k}}\hat{\pi}(k)\right)\frac{1}{\sqrt{4\pi\omega_k}}e^{-i\omega_kt+ikx}\,dk  
+\end{equation}
+Now let $f(x)=(P^+\Phi)(0,x)$. Then, 
+\begin{align*}
+  f(x)&=\frac{1}{2}\left(\frac{1}{\sqrt{2\pi}}\int_k\hat{\phi}(k)e^{ikx}dk+\frac{i}{\sqrt{2\pi}}\int_k\omega_k^{-1}\hat{\pi}(k)e^{ikx}dk\right)\\
+&=\frac{1}{2}\left(\phi(x)+i(\Omega^{-1}*\pi)(x)\right)
+\end{align*}
+where
+\begin{equation}
+\Omega=\mathcal{F}^{-1}\left[\omega_k\right](x)
+\end{equation}
+and
+\begin{equation}
+  \Omega^{-1}=\mathcal{F}^{-1}\left[\omega_k^{-1}\right](x)
+\end{equation}
+Let $g(x)=(P^+\dot{\Phi})(0,x)$. Then 
+\begin{align*}
+  g(x)&=\frac{1}{2}\left(\frac{-i}{\sqrt{2\pi}}\int_k\omega_k\hat{\phi}(k)e^{ikx}\,dk+\frac{1}{\sqrt{2\pi}}\int_k\hat{\pi}(k)e^{ikx}\,dk\right)\\
+      &=\frac{1}{2}\left(\pi(x)-i(\Omega*\phi)(x)\right)
+\end{align*}
+Therefore,
+\begin{equation}
+  P^+\begin{pmatrix}\phi\\ \pi\end{pmatrix}=\begin{pmatrix}f\\
+    g\end{pmatrix}=\frac{1}{2}\begin{pmatrix}\phi(x)+i(\Omega^{-1}*\pi)(x)\\ \pi(x)-i(\Omega*\phi)(x)\end{pmatrix}
+\end{equation}
+
+The next operator we concern ourselves with is $P^-$. This operator is
+defined as 
+\begin{align}
+P^-\Phi&=\int_k\bar{a}(k)\bar{U}_k\, dk\\
+&=\int_{k}\left(\sqrt{\frac{\omega_{k}}{2}}\hat{\phi}(-k)-i\sqrt{\frac{1}{2\omega_{k}}}\hat{\pi}(-k)\right)\frac{1}{\sqrt{4\pi\omega_{k}}}e^{i\omega_kt-ikx}\, dk
+\end{align}
+Let $f(x)=P^{-}\Phi(0,x)$. Then
+\begin{equation}
+f(x)=\frac{1}{2}\left(\frac{1}{\sqrt{2\pi}}\int_{-\infty}^{\infty}\hat{\phi}(-k)e^{-ikx}\, dk-\frac{i}{\sqrt{2\pi}}\int_{-\infty}^{\infty}\omega_{k}^{-1}\hat{\pi}(-k)e^{-ikx}\, dk\right)
+\end{equation}
+Let $z=-k$, then
+\begin{align*}
+f(x)&=\frac{1}{2}\left(-\frac{1}{\sqrt{2\pi}}\int_{\infty}^{-\infty}\hat{\phi}(z)e^{izx}\, dz+\frac{i}{\sqrt{2\pi}}\int_{\infty}^{-\infty}\omega_{k}^{-1}\hat{\pi}(z)e^{izx}\, dz\right)\\
+&=\frac{1}{2}\left(\frac{1}{\sqrt{2\pi}}\int_{-\infty}^{\infty}\hat{\phi}(z)e^{izx}\, dz-\frac{i}{\sqrt{2\pi}}\int_{-\infty}^{\infty}\omega^{-1}_{k}\hat{\pi}(z)e^{izx}\, dz\right)\\
+&=\frac{1}{2}(\phi(x)-i(\Omega^{-1}*\pi)(x))
+\end{align*}
+Next, let $g(x)=(P^{-}\dot{\Phi})(0,x)$. Then,
+\begin{equation}
+g(x)=\frac{1}{2}\left(\frac{i}{\sqrt{2\pi}}\int^{\infty}_{-\infty}\omega_{k}\hat{\phi}(-k)e^{-ikx}\, dk+\frac{1}{\sqrt{2\pi}}\int^{\infty}_{-\infty}\hat{\pi}(-k)e^{-ikx}\, dk\right)
+\end{equation}
+Again, let $z=-k$. Then,
+\begin{align*}
+g(x)&=\frac{1}{2}\left(-\frac{i}{\sqrt{2\pi}}\int^{-\infty}_{\infty}\omega_{k}\hat{\phi}(z)e^{izx}\, dz-\frac{1}{\sqrt{2\pi}}\int^{-\infty}_{\infty}\hat{\pi}(z)e^{izx}\, dz\right) \\
+&=\frac{1}{2}\left(\frac{i}{\sqrt{2\pi}}\int^{\infty}_{-\infty}\omega_{k}\hat{\phi}(z)e^{izx}\, dz+\frac{1}{\sqrt{2\pi}}\int^{\infty}_{-\infty}\hat{\pi}(z)e^{izx}\, dz\right) \\
+&=\frac{1}{2}(\pi(x)+i(\Omega*\phi)(x))
+\end{align*}
+Therefore, (apparently)
+\begin{equation}
+P^{-}\begin{pmatrix}\phi \\ \pi\end{pmatrix}=\begin{pmatrix}f \\ g\end{pmatrix}=\frac{1}{2}\begin{pmatrix}\phi(x)-i(\Omega^{-1}*\pi)(x)  \\ \pi(x)+i(\Omega*\phi)(x)\end{pmatrix}
+\end{equation}
+Hence,
+\begin{equation}
+P^{-}\begin{pmatrix}\phi \\ \pi\end{pmatrix}=\overline{P^{+}\begin{pmatrix}\phi \\ \pi\end{pmatrix}}
+\end{equation}
+The canonical symmetry $J$ is defined as $J=P^{+}-P^{-}$. Thus,
+\begin{align}
+J\begin{pmatrix}\phi \\ \pi\end{pmatrix}&=(P^{+}-P^{-})\begin{pmatrix}\phi \\ \pi\end{pmatrix}\\
+&=P^{+}\begin{pmatrix}\phi \\ \pi\end{pmatrix}-P^{-}\begin{pmatrix}\phi \\ \pi\end{pmatrix}\\
+&=i\begin{pmatrix}
+\left(\Omega^{-1}*\pi\right)(x) \\ -\left(\Omega*\phi\right)(x)
+\end{pmatrix}
+\end{align}
+
+\begin{claim}
+  For $P^{\pm}$, we have 
+  \begin{equation}
+    P^{\pm}\left(P^{\pm}\begin{pmatrix}\phi \\ \pi\end{pmatrix}\right)=P^{\pm}\begin{pmatrix}\phi \\ \pi\end{pmatrix}
+  \end{equation}
+\end{claim}
+\begin{proof}[Reason]
+  Let us consider the operator $P^{-}$. Let \begin{equation}
+\begin{pmatrix}f\\ g\end{pmatrix}=P^{-}\begin{pmatrix}\phi\\ \pi\end{pmatrix}
+\end{equation}
+Then \begin{align*}
+P^{-}\left(P^{-}\begin{pmatrix}\phi \\ \pi\end{pmatrix}\right)&=P^{-}\begin{pmatrix}f\\ g\end{pmatrix}=\frac{1}{2}\begin{pmatrix}f(x)-i(\Omega^{-1}*g)(x)\\ g(x)+i(\Omega*f)(x)\end{pmatrix}\\
+&=\frac{1}{2}\begin{pmatrix}\frac{1}{2}(\phi(x)-i(\Omega^{-1}*\pi)(x)-i(\Omega^{-1}*(\pi+i(\Omega*\phi)))(x))\\
+  \frac{1}{2}(\pi(x)+i(\Omega*\phi)(x)+i(\Omega*(\phi-i(\Omega^{-1}*\pi)))(x))\end{pmatrix}\\
+&=\frac{1}{2}\begin{pmatrix}\phi(x)-i(\Omega^{-1}*\pi)(x)\\
+  \pi(x)+i(\Omega*\phi)(x)\end{pmatrix}\\
+&=P^{-}\begin{pmatrix}\phi\\ \pi\end{pmatrix}
+\end{align*}
+as required. A nearly identical argument can be used to show the
+result for $P^{+}$.
+\end{proof}
+\end{document}
